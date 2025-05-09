@@ -15,6 +15,7 @@
 
     <modules>
         <module>user_service</module>
+        <module>config_service</module>
     </modules>
 
     <properties>
