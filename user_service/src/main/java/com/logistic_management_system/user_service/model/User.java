@@ -29,7 +29,8 @@ public class User {
 
     private boolean active = true;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "profile_id")
     private UserProfile profile;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -1,5 +1,6 @@
 package com.logistic_management_system.user_service.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,6 +9,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserProfile {
 
     @Id
@@ -23,7 +25,10 @@ public class UserProfile {
     private String country;
     private String postalCode;
 
-    private String profileImageUrl;
+    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
+    @JsonBackReference
+    private User user;
+
 
 }
 
