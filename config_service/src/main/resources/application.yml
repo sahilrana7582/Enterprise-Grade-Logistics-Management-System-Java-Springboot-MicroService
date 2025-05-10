@@ -10,5 +10,6 @@ spring:
           searchPaths: Enterprise-Grade-Logistics-Management-System-Java-Springboot-MicroService
 
 
+
 server:
   port: 8888
