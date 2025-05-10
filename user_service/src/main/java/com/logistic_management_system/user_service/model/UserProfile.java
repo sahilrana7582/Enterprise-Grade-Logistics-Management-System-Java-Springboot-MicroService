@@ -29,6 +29,5 @@ public class UserProfile {
     @JsonBackReference
     private User user;
 
-
 }
 

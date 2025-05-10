@@ -16,6 +16,7 @@
     <modules>
         <module>user_service</module>
         <module>config_service</module>
+        <module>shipment_service</module>
     </modules>
 
     <properties>

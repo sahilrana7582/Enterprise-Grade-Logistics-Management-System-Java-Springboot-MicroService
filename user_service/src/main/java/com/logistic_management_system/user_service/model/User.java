@@ -42,10 +42,5 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
 
-    @Column(name = "created_at", updatable = false, insertable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", insertable = false)
-    private LocalDateTime updatedAt;
 }
 

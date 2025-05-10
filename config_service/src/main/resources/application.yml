@@ -8,6 +8,8 @@ spring:
           uri: https://github.com/sahilrana7582/config-repo
           clone-on-start: true
           searchPaths: Enterprise-Grade-Logistics-Management-System-Java-Springboot-MicroService
+          username: sahilrana7582
+          password: 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
 
 server:
   port: 8888
