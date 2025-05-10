@@ -51,6 +51,14 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>com.logistic_management_system</groupId>
+			<artifactId>commons-modules</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+
+
 
 
 		<dependency>
