@@ -1,6 +1,7 @@
 package com.logistic_management_system.shipment_service.model;
 
 import com.logistic_management_system.shipment_service.enums.ShipmentStatus;
+import com.logistic_management_system.shipment_service.enums.ShipmentType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -22,13 +23,12 @@ public class Shipment {
     @Column(name = "tracking_number", nullable = false, unique = true, updatable = false)
     private String trackingNumber;
 
-    // Sender (references User Service by ID or external userId)
     @Column(name = "sender_id", nullable = false)
     private Long senderId;
 
-    // If you need receiver as a user from system, also store receiverId
-    @Embedded
-    private ReceiverDetails receiver;
+
+    @Column(name = "receiver_id", nullable = false)
+    private Long receiverId;
 
     @Embedded
     @AttributeOverrides({
