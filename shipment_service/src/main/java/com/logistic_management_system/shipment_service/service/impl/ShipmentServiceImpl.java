@@ -1,6 +1,7 @@
 package com.logistic_management_system.shipment_service.service.impl;
 
-import com.logistic_management_system.shipment.ShipmentCreatedEvent;
+import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import com.logistic_management_system.shipment_service.config.KafkaProducerTemplate;
 import com.logistic_management_system.shipment_service.dto.*;
 import com.logistic_management_system.shipment_service.exception.ResourceNotFoundException;
 import com.logistic_management_system.shipment_service.mapper.ShipmentMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class ShipmentServiceImpl implements ShipmentService {
 
     private final ShipmentRepository shipmentRepository;
+    private final KafkaProducerTemplate kafkaProducerTemplate;
 
     @Override
     public ShipmentResponseDTO createShipment(CreateShipmentRequestDTO requestDTO) {
@@ -41,6 +44,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         event.setCost(saved.getCost());
         event.setExpectedDeliveryDate(LocalDateTime.now().plusDays(5));
         event.setStatus(saved.getStatus().toString());
+        event.setEventId(UUID.randomUUID().toString());
+        event.setShipmentType("SHIPMENT_CREATED");
+
+        kafkaProducerTemplate.sendShipmentCreatedEvent(event);
 
 
         return ShipmentMapper.toResponseDTO(saved);

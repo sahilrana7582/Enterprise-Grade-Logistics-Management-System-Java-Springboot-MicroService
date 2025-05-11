@@ -1,4 +1,5 @@
-package com.logistic_management_system.shipment;
+package com.example.expense_tracker.common;
+
 
 import lombok.*;
 
@@ -40,3 +41,4 @@ public class ShipmentCreatedEvent implements Serializable {
 
     private String status;                  // Shipment status (e.g., "CREATED")
 }
+

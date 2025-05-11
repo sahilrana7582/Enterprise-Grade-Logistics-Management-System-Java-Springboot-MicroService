@@ -17,7 +17,7 @@
         <module>user_service</module>
         <module>config_service</module>
         <module>shipment_service</module>
-        <module>commons_modules</module>
+        <module>common-models</module>
     </modules>
 
     <properties>
