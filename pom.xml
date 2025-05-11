@@ -18,6 +18,7 @@
         <module>config_service</module>
         <module>shipment_service</module>
         <module>common-models</module>
+        <module>email_service</module>
     </modules>
 
     <properties>

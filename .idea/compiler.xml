@@ -10,12 +10,12 @@
         <module name="user_service" />
         <module name="config_service" />
         <module name="common-models" />
+        <module name="email_service" />
         <module name="shipment_service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="commons_modules" target="21" />
-      <module name="email_service" target="23" />
       <module name="user_service (1)" target="21" />
     </bytecodeTargetLevel>
   </component>
@@ -23,6 +23,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="commons_modules" options="" />
       <module name="config_service" options="-parameters" />
+      <module name="email_service" options="-parameters" />
       <module name="shipment_service" options="" />
       <module name="user_service" options="-parameters" />
       <module name="user_service (1)" options="-parameters" />

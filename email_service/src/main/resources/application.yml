@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: email_service
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: i.sahil8968627582@gmail.com
+add
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
