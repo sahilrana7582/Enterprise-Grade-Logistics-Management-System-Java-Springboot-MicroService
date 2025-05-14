@@ -31,15 +31,15 @@ public class DriverAssignmentController {
 
     @GetMapping("/{shipmentId}")
     public ResponseEntity<ShipmentAssignmentResponseDTO> getAssignmentByShipmentId(
-            @PathVariable Long shipmentId) {
+            @PathVariable("shipmentId") Long shipmentId) {
         log.info("Fetching assignment for shipmentId: {}", shipmentId);
         ShipmentAssignmentResponseDTO response = driverAssignmentService.getAssignmentByShipmentId(shipmentId);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/driver/{id}")
     public ResponseEntity<Driver> getAssignmentById(
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
         log.info("Fetching assignment for id: {}", id);
         Driver response = driverAssignmentService.getDriverById(id);
         return ResponseEntity.ok(response);

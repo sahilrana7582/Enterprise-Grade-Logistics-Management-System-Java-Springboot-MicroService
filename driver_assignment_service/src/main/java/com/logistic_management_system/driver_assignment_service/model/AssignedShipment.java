@@ -1,6 +1,7 @@
 package com.logistic_management_system.driver_assignment_service.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class AssignedShipment {
 
     @ManyToOne
     @JoinColumn(name = "driver_id")
+    @JsonBackReference
     private Driver driver;
 
     private LocalDateTime assignedTime;

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -58,24 +59,28 @@ public class DriverAssignmentServiceImpl implements DriverAssignmentService {
         log.info("Kafka Event Received - ShipmentCreatedEvent: {}", event);
 
         try {
-            // Auto-select driver with the fewest assignments (simple load balancing)
-            Optional<Driver> selectedDriver = driverRepository.findAll().stream()
-                    .min(Comparator.comparingInt(driver -> driver.getShipments().size()));
 
-            if (selectedDriver.isPresent()) {
-                log.warn("No available drivers to assign shipment ID: {}", event.getShipmentId());
+            List<Driver> drivers = driverRepository.findAll();
+
+            Driver selectedDriver = drivers.get((int) Math.floor(Math.random() * drivers.size()));
+
+            if(selectedDriver == null) {
+                log.error("No drivers available for shipment ID: {}", event.getShipmentId());
                 return;
             }
 
+
+            log.info("Driver selected - Driver ID: {}", selectedDriver.getName());
+
             AssignedShipment assignment = new AssignedShipment();
             assignment.setShipmentId(event.getShipmentId());
-            assignment.setDriver(selectedDriver.get());
+            assignment.setDriver(selectedDriver);
             assignment.setAssignedTime(LocalDateTime.now());
 
             AssignedShipment saved = assignmentRepository.save(assignment);
 
             log.info("Driver assigned successfully - Driver ID: {}, Shipment ID: {}",
-                    selectedDriver.get().getId(), event.getShipmentId());
+                    selectedDriver.getId(), event.getShipmentId());
 
         } catch (Exception ex) {
             log.error("Error processing ShipmentCreatedEvent for shipment ID: {} - {}",
