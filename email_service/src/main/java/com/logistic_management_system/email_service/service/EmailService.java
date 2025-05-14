@@ -1,6 +1,7 @@
 package com.logistic_management_system.email_service.service;
 
 import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,8 +14,11 @@ import java.util.concurrent.Executor;
 @Service
 public class EmailService {
 
+
     @Autowired
     private JavaMailSender mailSender;
+
+
 
     @Autowired
     @Qualifier("emailServiceExecutor")
@@ -29,10 +33,17 @@ public class EmailService {
         emailExecutor.execute(() -> sendEmail(event));
     }
 
-    private void sendEmail(ShipmentCreatedEvent event) {
+
+
+
+    @Retry(name = "emailRetry", fallbackMethod = "fallbackEmailSender")
+    public void sendEmail(ShipmentCreatedEvent event) {
         try {
+
+
             System.out.println("📦 Processing shipment ID: " + event.getShipmentId() + " on Thread: " + Thread.currentThread().getName());
-            Thread.sleep(10000);
+//            Thread.sleep(10000);
+
 
             String subject = "Shipment Created: " + event.getShipmentId();
             String text = "Shipment ID: " + event.getShipmentId() + "\n" +
@@ -61,5 +72,12 @@ public class EmailService {
             System.err.println("❌ Failed to send email for shipment ID: " + event.getShipmentId());
             e.printStackTrace();
         }
+
+    }
+
+
+    public void fallbackEmailSender(ShipmentCreatedEvent event, Throwable ex) {
+        System.err.println("❌ Failed to send email after retries for Shipment ID: " + event.getShipmentId());
+        System.err.println("❌ Reason: " + ex.getMessage());
     }
 }
