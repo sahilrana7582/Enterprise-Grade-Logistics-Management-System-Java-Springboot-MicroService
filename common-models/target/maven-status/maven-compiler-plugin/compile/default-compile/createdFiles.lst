@@ -1,3 +1,4 @@
 com/example/expense_tracker/common/UserCreatedEvent.class
 com/example/expense_tracker/common/TransactionCreatedEvent.class
+com/example/expense_tracker/common/DriverAssignedEvent.class
 com/example/expense_tracker/common/ShipmentCreatedEvent.class

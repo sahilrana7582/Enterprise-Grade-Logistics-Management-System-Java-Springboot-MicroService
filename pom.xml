@@ -18,6 +18,7 @@
         <module>config_service</module>
         <module>shipment_service</module>
         <module>common-models</module>
+        <module>driver_assignment_service</module>
         <module>email_service</module>
     </modules>
 
