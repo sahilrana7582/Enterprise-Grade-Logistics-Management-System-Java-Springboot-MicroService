@@ -8,11 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="user_service" />
-        <module name="config_service" />
         <module name="common-models" />
-        <module name="email_service" />
         <module name="config_service (1)" />
         <module name="shipment_service" />
+        <module name="notification_service" />
+        <module name="config_service" />
+        <module name="email_service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -26,6 +27,7 @@
       <module name="config_service" options="-parameters" />
       <module name="config_service (1)" options="" />
       <module name="email_service" options="-parameters" />
+      <module name="notification_service" options="" />
       <module name="shipment_service" options="" />
       <module name="user_service" options="-parameters" />
       <module name="user_service (1)" options="-parameters" />

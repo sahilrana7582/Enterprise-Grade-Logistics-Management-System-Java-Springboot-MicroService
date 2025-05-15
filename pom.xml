@@ -20,6 +20,7 @@
         <module>common-models</module>
         <module>driver_assignment_service</module>
         <module>email_service</module>
+        <module>notification_service</module>
     </modules>
 
     <properties>
