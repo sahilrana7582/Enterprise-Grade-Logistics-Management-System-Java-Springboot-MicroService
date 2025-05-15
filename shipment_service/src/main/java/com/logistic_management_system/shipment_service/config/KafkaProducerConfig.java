@@ -1,6 +1,6 @@
 package com.logistic_management_system.shipment_service.config;
 
-import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import com.logistic_management_system.common.ShipmentCreatedEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

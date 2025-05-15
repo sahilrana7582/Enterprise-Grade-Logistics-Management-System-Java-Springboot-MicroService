@@ -1,16 +1,19 @@
 package com.logistic_management_system.driver_assignment_service.config;
 
-import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import com.logistic_management_system.common.DriverAssignedEvent;
+import com.logistic_management_system.common.ShipmentCreatedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
+import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,4 +41,25 @@ public class KafkaConfig {
         factory.setConsumerFactory(consumerFactory(ShipmentCreatedEvent.class, "driver_assignment_service"));
         return factory;
     }
+
+    public <T> ProducerFactory<String, T> producerFactory(Class<T> eventType) {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public ProducerFactory<String, DriverAssignedEvent> driverAssignedProducerFactory() {
+        return producerFactory(DriverAssignedEvent.class);
+    }
+
+    @Bean
+    public KafkaTemplate<String, DriverAssignedEvent> driverAssignedKafkaTemplate() {
+        return new KafkaTemplate<>(driverAssignedProducerFactory());
+    }
+
+
 }

@@ -1,4 +1,4 @@
-com/example/expense_tracker/common/UserCreatedEvent.class
-com/example/expense_tracker/common/TransactionCreatedEvent.class
-com/example/expense_tracker/common/DriverAssignedEvent.class
-com/example/expense_tracker/common/ShipmentCreatedEvent.class
+com/logistic_management_system/common/TransactionCreatedEvent.class
+com/logistic_management_system/common/UserCreatedEvent.class
+com/logistic_management_system/common/DriverAssignedEvent.class
+com/logistic_management_system/common/ShipmentCreatedEvent.class

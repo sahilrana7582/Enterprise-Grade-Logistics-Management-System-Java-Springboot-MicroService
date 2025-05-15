@@ -1,6 +1,6 @@
 package com.logistic_management_system.shipment_service.service.impl;
 
-import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import com.logistic_management_system.common.ShipmentCreatedEvent;
 import com.logistic_management_system.shipment_service.config.KafkaProducerTemplate;
 import com.logistic_management_system.shipment_service.dto.*;
 import com.logistic_management_system.shipment_service.exception.ResourceNotFoundException;

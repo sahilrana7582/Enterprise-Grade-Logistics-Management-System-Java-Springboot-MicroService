@@ -1,4 +1,4 @@
-package com.example.expense_tracker.common;
+package com.logistic_management_system.common;
 
 
 import lombok.AllArgsConstructor;

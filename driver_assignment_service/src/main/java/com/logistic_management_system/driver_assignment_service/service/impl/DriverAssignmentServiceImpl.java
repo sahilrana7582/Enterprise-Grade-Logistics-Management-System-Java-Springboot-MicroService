@@ -1,6 +1,7 @@
 package com.logistic_management_system.driver_assignment_service.service.impl;
 
-import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import com.logistic_management_system.common.DriverAssignedEvent;
+import com.logistic_management_system.common.ShipmentCreatedEvent;
 import com.logistic_management_system.driver_assignment_service.dto.DriverRequestDto;
 import com.logistic_management_system.driver_assignment_service.dto.ShipmentAssignmentResponseDTO;
 import com.logistic_management_system.driver_assignment_service.mapper.DriverAssignmentMapper;
@@ -13,12 +14,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -27,6 +29,8 @@ public class DriverAssignmentServiceImpl implements DriverAssignmentService {
 
     private final DriverRepository driverRepository;
     private final AssignedShipmentRepository assignmentRepository;
+    private final KafkaTemplate<String, DriverAssignedEvent> driverAssignedEventKafkaTemplate;
+    private static final String TOPIC_NAME = "driver_assigned_topic";
 
     @Override
     @Transactional
@@ -79,8 +83,25 @@ public class DriverAssignmentServiceImpl implements DriverAssignmentService {
 
             AssignedShipment saved = assignmentRepository.save(assignment);
 
-            log.info("Driver assigned successfully - Driver ID: {}, Shipment ID: {}",
+            log.info("--------> Driver assigned successfully - Driver ID: {}, Shipment ID: {}",
                     selectedDriver.getId(), event.getShipmentId());
+
+            DriverAssignedEvent driverAssignedEvent = new DriverAssignedEvent();
+            driverAssignedEvent.setEventId(UUID.randomUUID().toString());
+            driverAssignedEvent.setShipmentId(event.getShipmentId());
+            driverAssignedEvent.setDriverId(selectedDriver.getId());
+            driverAssignedEvent.setAssignedTime(LocalDateTime.now());
+
+           CompletableFuture<?> future = driverAssignedEventKafkaTemplate.send(TOPIC_NAME, driverAssignedEvent.getEventId(), driverAssignedEvent);
+
+           future.whenComplete((result, exception) -> {
+               if (exception != null) {
+                   log.error("Error sending DriverAssignedEvent for shipment ID: {} - {}",
+                           event.getShipmentId(), exception.getMessage(), exception);
+               } else {
+                   log.info("DriverAssignedEvent sent successfully for shipment ID: {}", event.getShipmentId());
+               }
+           });
 
         } catch (Exception ex) {
             log.error("Error processing ShipmentCreatedEvent for shipment ID: {} - {}",

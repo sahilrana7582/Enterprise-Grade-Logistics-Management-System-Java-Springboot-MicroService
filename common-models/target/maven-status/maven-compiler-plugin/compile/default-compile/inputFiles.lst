@@ -1,4 +1,4 @@
-/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/example/expense_tracker/common/DriverAssignedEvent.java
-/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/example/expense_tracker/common/ShipmentCreatedEvent.java
-/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/example/expense_tracker/common/TransactionCreatedEvent.java
-/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/example/expense_tracker/common/UserCreatedEvent.java
+/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/logistic_management_system/common/DriverAssignedEvent.java
+/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/logistic_management_system/common/ShipmentCreatedEvent.java
+/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/logistic_management_system/common/TransactionCreatedEvent.java
+/Users/krishna/Desktop/Learning Java + SrpingBoot/Logistics Management System/common-models/src/main/java/com/logistic_management_system/common/UserCreatedEvent.java

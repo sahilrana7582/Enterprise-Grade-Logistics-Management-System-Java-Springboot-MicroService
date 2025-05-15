@@ -1,7 +1,8 @@
 package com.logistic_management_system.email_service.config;
 
 
-import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import com.logistic_management_system.common.DriverAssignedEvent;
+import com.logistic_management_system.common.ShipmentCreatedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -39,4 +40,14 @@ public class KafkaConsumer {
         factory.setConsumerFactory(consumerFactory(ShipmentCreatedEvent.class, "email-service"));
         return factory;
     }
+
+    @Bean(name = "driverAssignmentConsumerFactory")
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, DriverAssignedEvent>> driverAssignmentEventKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, DriverAssignedEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory(DriverAssignedEvent.class, "email-service"));
+        return factory;
+    }
+
+
 }

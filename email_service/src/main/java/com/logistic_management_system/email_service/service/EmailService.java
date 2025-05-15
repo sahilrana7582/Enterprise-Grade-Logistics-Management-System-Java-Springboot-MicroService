@@ -1,11 +1,11 @@
 package com.logistic_management_system.email_service.service;
 
-import com.example.expense_tracker.common.ShipmentCreatedEvent;
+import com.logistic_management_system.common.DriverAssignedEvent;
+import com.logistic_management_system.common.ShipmentCreatedEvent;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -33,43 +33,56 @@ public class EmailService {
         emailExecutor.execute(() -> sendEmail(event));
     }
 
-
-
-
     @Retry(name = "emailRetry", fallbackMethod = "fallbackEmailSender")
-    public void sendEmail(ShipmentCreatedEvent event) {
+    public <T> void sendEmail(T event) {
         try {
+            if (event instanceof ShipmentCreatedEvent shipmentCreatedEvent) {
+                System.out.println("📦 Processing shipment ID: " + shipmentCreatedEvent.getShipmentId()
+                        + " on Thread: " + Thread.currentThread().getName());
+
+                String subject = "Shipment Created: " + shipmentCreatedEvent.getShipmentId();
+                String text = "Shipment ID: " + shipmentCreatedEvent.getShipmentId() + "\n" +
+                        "Tracking Number: " + shipmentCreatedEvent.getTrackingNumber() + "\n" +
+                        "Sender ID: " + shipmentCreatedEvent.getSenderId() + "\n" +
+                        "Receiver ID: " + shipmentCreatedEvent.getReceiverId() + "\n" +
+                        "Origin City: " + shipmentCreatedEvent.getOriginCity() + "\n" +
+                        "Destination City: " + shipmentCreatedEvent.getDestinationCity() + "\n" +
+                        "Shipment Type: " + shipmentCreatedEvent.getShipmentType() + "\n" +
+                        "Weight (kg): " + shipmentCreatedEvent.getWeightKg() + "\n" +
+                        "Cost: $" + shipmentCreatedEvent.getCost() + "\n" +
+                        "Expected Delivery Date: " + shipmentCreatedEvent.getExpectedDeliveryDate() + "\n" +
+                        "Status: " + shipmentCreatedEvent.getStatus();
+
+                System.out.println("✅ Email sent to " + shipmentCreatedEvent.getReceiverEmail());
+            }
 
 
-            System.out.println("📦 Processing shipment ID: " + event.getShipmentId() + " on Thread: " + Thread.currentThread().getName());
-//            Thread.sleep(10000);
+            System.out.println("📦 Processing shipment ID: " + event + " on Thread: " + Thread.currentThread().getName());
+            System.out.println("Looking For Available Driver");
+            Thread.sleep(5000);
 
 
-            String subject = "Shipment Created: " + event.getShipmentId();
-            String text = "Shipment ID: " + event.getShipmentId() + "\n" +
-                    "Tracking Number: " + event.getTrackingNumber() + "\n" +
-                    "Sender ID: " + event.getSenderId() + "\n" +
-                    "Receiver ID: " + event.getReceiverId() + "\n" +
-                    "Origin City: " + event.getOriginCity() + "\n" +
-                    "Destination City: " + event.getDestinationCity() + "\n" +
-                    "Shipment Type: " + event.getShipmentType() + "\n" +
-                    "Weight (kg): " + event.getWeightKg() + "\n" +
-                    "Cost: $" + event.getCost() + "\n" +
-                    "Expected Delivery Date: " + event.getExpectedDeliveryDate() + "\n" +
-                    "Status: " + event.getStatus();
+            if (event instanceof DriverAssignedEvent) {
+                DriverAssignedEvent driverAssignedEvent = (DriverAssignedEvent) event;
 
-//            SimpleMailMessage message = new SimpleMailMessage();
-//            message.setTo(event.getReceiverEmail());
-//            message.setFrom("i.sahil0001@gmail.com");
-//            message.setSubject(subject);
-//            message.setText(text);
+                System.out.println("📦 Processing driver assignment for shipment ID: "
+                        + driverAssignedEvent.getShipmentId()
+                        + " on Thread: " + Thread.currentThread().getName());
 
-//            mailSender.send(message);
 
-            System.out.println("✅ Email sent to " + event.getReceiverEmail());
+                System.out.println("========= Driver Assigned Info =========");
+                System.out.println("Driver ID: " + driverAssignedEvent.getDriverId());
+                System.out.println("Shipment Id: " + driverAssignedEvent.getShipmentId());
+                System.out.println("Assigned Time: " + driverAssignedEvent.getAssignedTime());
+
+                System.out.println("========================================");
+
+            }
+
+
 
         } catch (Exception e) {
-            System.err.println("❌ Failed to send email for shipment ID: " + event.getShipmentId());
+            System.err.println("❌ Failed to send email for shipment ID: " + event);
             e.printStackTrace();
         }
 
@@ -79,5 +92,17 @@ public class EmailService {
     public void fallbackEmailSender(ShipmentCreatedEvent event, Throwable ex) {
         System.err.println("❌ Failed to send email after retries for Shipment ID: " + event.getShipmentId());
         System.err.println("❌ Reason: " + ex.getMessage());
+    }
+
+
+
+
+    @KafkaListener(
+            topics = "driver_assigned_topic",
+            groupId = "email-service",
+            containerFactory = "driverAssignmentConsumerFactory"
+    )
+    public void handleDriverAssignedEvent(DriverAssignedEvent event) {
+        emailExecutor.execute(() -> sendEmail(event));
     }
 }
